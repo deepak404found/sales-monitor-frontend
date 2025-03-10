@@ -1,11 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import axios from 'axios'
 import { useCallback } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { MySwal } from '../../utils/helpers'
-import { decodeToken, useAuth } from '../auth'
-import axios from 'axios'
 import { useApi } from '../api'
+import { useAuth } from '../auth'
 
 const LoginForm = z.object({
   username: z.string().nonempty('Please enter a valid username'),
@@ -44,18 +44,14 @@ export const useLogin = () => {
           .then((res) => {
             // console.log(res)
 
-            if (res?.data?.user && res?.data?.token) {
-              const decoded = decodeToken(res?.data?.token)
-              console.log(res?.data?.user, res?.data?.token, decoded)
-              // handleLogin(res?.data?.user, res?.data?.token)
+            if (res?.data?.user && res?.data?.access) {
+              handleLogin(res?.data?.user, res?.data?.access)
               MySwal.fire({
                 title: 'Login Successful',
                 text: 'You have successfully logged in',
                 icon: 'success',
               })
             }
-
-            window.location.href = `${res?.data?.user?.department}/dashboard`
           })
           .catch((err) => {
             console.log(err)

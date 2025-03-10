@@ -7,12 +7,6 @@ import { User } from '@sales-monitor-frontend/utils/types'
 
 export const guestRoutes = ['/login', '/reset-password']
 
-export type DecodedToken = {
-  email?: string
-  department?: string
-  role?: string
-}
-
 /**
  *
  * @name isTokenExpiry
@@ -91,19 +85,9 @@ export const useAuth = () => {
     return true
   }, [handleLogin, handleLogout, pathname])
 
-  const fetchTokenData = useCallback(() => {
-    const accessToken = localStorage.getItem('x-access-token')
-    if (!accessToken) return
-    const decodedToken = decodeToken(accessToken)
-    console.log(decodedToken, 'decodedToken')
-    // setDecodedToken(decodedToken as DecodedToken)
-    return decodedToken as DecodedToken
-  }, [])
-
   return {
     handleLogin,
     handleLogout,
     checkAuth,
-    fetchTokenData,
   }
 }

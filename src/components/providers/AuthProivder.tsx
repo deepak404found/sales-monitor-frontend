@@ -1,11 +1,12 @@
 'use client'
 
 import LoadingPage from '@sales-monitor-frontend/app/loading'
-import { guestRoutes, useAuth } from '@sales-monitor-frontend/hooks/auth'
+import { useAuth } from '@sales-monitor-frontend/hooks/auth'
 import { usePathname, useRouter } from 'next/navigation'
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getAuth } from '../../global/reducers/authReducer'
+import { guestRoutes } from '@sales-monitor-frontend/utils/helpers'
 
 const AuthProvider = ({ children }: React.PropsWithChildren) => {
   const pathname = usePathname()

@@ -4,8 +4,7 @@ import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import { login, logout } from '../../global/reducers/authReducer'
 import { User } from '@sales-monitor-frontend/utils/types'
-
-export const guestRoutes = ['/login', '/reset-password']
+import { guestRoutes } from '@sales-monitor-frontend/utils/helpers'
 
 /**
  *

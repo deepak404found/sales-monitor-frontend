@@ -1,5 +1,8 @@
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
+import { IRoutesDetails } from './types'
+import DashboardIcon from '@mui/icons-material/Dashboard'
+import CategoryIcon from '@mui/icons-material/Category'
 
 export const MySwal = withReactContent(Swal)
 
@@ -28,3 +31,25 @@ export const commonListFilter: ICommonListFilter = {
   sortBy: '',
   sortOrder: 'asc',
 }
+
+export const topBarHeight = 52
+export const sidebarWidth = 240
+
+export const guestRoutes = ['/login', '/reset-password']
+
+export const appRoutes: IRoutesDetails[] = [
+  {
+    route: '/dashboard',
+    label: 'Dashboard',
+    icon: <DashboardIcon />,
+  },
+  // {
+  //   route: '/users',
+  //   label: 'Users',
+  // },
+  {
+    route: '/products',
+    label: 'Products',
+    icon: <CategoryIcon />,
+  },
+]

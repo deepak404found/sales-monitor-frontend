@@ -71,7 +71,7 @@ export const useLogin = () => {
         })
       }
     )()
-  }, [usersApiPath, getValues, handleSubmit])
+  }, [handleSubmit, usersApiPath, handleLogin, getValues])
 
   return {
     register,

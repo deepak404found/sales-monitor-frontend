@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { useCallback, useState } from 'react'
 import { useApi } from '../api'
-import { ProductsList } from '../../utils/types'
+import { ItemsByMonth, ProductsList, SalesByMonth } from '../../utils/types'
 import { MySwal } from '@sales-monitor-frontend/utils/helpers'
 
 export type ListProductsFilter = {
@@ -237,5 +237,141 @@ export const useProducts = () => {
     categories,
     fetchPriceRange,
     price_range,
+  }
+}
+
+export const useProductCharts = () => {
+  const [sales_chart, setSalesChart] = useState<SalesByMonth[] | null>(null)
+  const [items_chart, setItemsChart] = useState<ItemsByMonth[] | null>(null)
+
+  const { productsApiPath, authConfig } = useApi()
+
+  /**
+   * Fetch sales chart data from the server and store them in the state.{@link sales_chart}
+   *
+   * @param cb - callback function. It will be called after fetching data. (data?: SalesByMonth) => void
+   * @param errCb - error callback function. It will be called if there is an error while fetching data. (err?: unknown) => void
+   *
+   **/
+  const fetchSalesChart = useCallback(
+    async (
+      cb?: (data?: SalesByMonth) => void,
+      errCb?: (err?: unknown) => void
+    ) => {
+      try {
+        console.log('Fetching sales chart')
+
+        // call api to fetch sales chart
+        axios
+          .get(`${productsApiPath}/sales_chart`, {
+            headers: authConfig.headers,
+          })
+          .then((res) => {
+            if (res?.data) {
+              setSalesChart(res.data)
+              return cb && cb(res.data)
+            }
+
+            console.error('Error fetching sales chart', res)
+            MySwal.fire({
+              icon: 'error',
+              title: 'Error fetching sales chart',
+              text: `Error fetching sales chart: ${
+                res?.data?.message || 'Unknown error'
+              }`,
+            })
+            return errCb && errCb(res)
+          })
+          .catch((error) => {
+            console.error('Error fetching sales chart', error?.response)
+            const errorMsg = error?.response?.data?.message || error.message
+            MySwal.fire({
+              icon: 'error',
+              title: 'Error fetching sales chart',
+              text: `Error fetching sales chart: ${
+                errorMsg || 'Unknown error'
+              }`,
+            })
+            return errCb && errCb(error)
+          })
+      } catch (error) {
+        console.error('Error fetching sales chart', error)
+        MySwal.fire({
+          icon: 'error',
+          title: 'Error fetching sales chart',
+          text: `Error fetching sales chart`,
+        })
+        return errCb && errCb(error)
+      }
+    },
+    [authConfig.headers, productsApiPath]
+  )
+
+  /**
+   * Fetch items chart data from the server and store them in the state.{@link items_chart}
+   *
+   * @param cb - callback function. It will be called after fetching data. (data?: ItemsByMonth) => void
+   * @param errCb - error callback function. It will be called if there is an error while fetching data. (err?: unknown) => void
+   *
+   **/
+  const fetchItemsChart = useCallback(
+    async (
+      cb?: (data?: ItemsByMonth) => void,
+      errCb?: (err?: unknown) => void
+    ) => {
+      try {
+        console.log('Fetching items chart')
+
+        // call api to fetch items chart
+        axios
+          .get(`${productsApiPath}/items_chart`, {
+            headers: authConfig.headers,
+          })
+          .then((res) => {
+            if (res?.data) {
+              setItemsChart(res.data)
+              return cb && cb(res.data)
+            }
+
+            console.error('Error fetching items chart', res)
+            MySwal.fire({
+              icon: 'error',
+              title: 'Error fetching items chart',
+              text: `Error fetching items chart: ${
+                res?.data?.message || 'Unknown error'
+              }`,
+            })
+            return errCb && errCb(res)
+          })
+          .catch((error) => {
+            console.error('Error fetching items chart', error?.response)
+            const errorMsg = error?.response?.data?.message || error.message
+            MySwal.fire({
+              icon: 'error',
+              title: 'Error fetching items chart',
+              text: `Error fetching items chart: ${
+                errorMsg || 'Unknown error'
+              }`,
+            })
+            return errCb && errCb(error)
+          })
+      } catch (error) {
+        console.error('Error fetching items chart', error)
+        MySwal.fire({
+          icon: 'error',
+          title: 'Error fetching items chart',
+          text: `Error fetching items chart`,
+        })
+        return errCb && errCb(error)
+      }
+    },
+    [authConfig.headers, productsApiPath]
+  )
+
+  return {
+    sales_chart,
+    items_chart,
+    fetchSalesChart,
+    fetchItemsChart,
   }
 }

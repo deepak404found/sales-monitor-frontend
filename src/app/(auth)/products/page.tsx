@@ -46,14 +46,11 @@ export default function ProductsPage() {
     []
   )
 
-  // console.log(products)
-
-  // Memoize the debounced function to avoid recreating it on every render
   const debouncedListProducts = useMemo(
     () =>
       debounce((newFilters: ListProductsFilter) => {
         listProducts(newFilters)
-      }, 1000), // 500ms debounce
+      }, 1000),
     [listProducts]
   )
 

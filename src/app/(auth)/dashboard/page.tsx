@@ -1,9 +1,14 @@
 import { Typography } from '@mui/material'
+import Stack from '@mui/material/Stack'
+import ProductCharts from './_compoents/ProductCharts'
 
 export default function DashboardPage() {
   return (
-    <div>
+    <Stack spacing={2}>
       <Typography variant="h4">Dashboard</Typography>
-    </div>
+
+      {/* carts */}
+      <ProductCharts />
+    </Stack>
   )
 }

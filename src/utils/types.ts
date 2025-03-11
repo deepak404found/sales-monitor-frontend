@@ -32,3 +32,17 @@ export type ProductsList = {
   previous: string | null
   results: Product[]
 }
+
+export type ItemsByMonth = {
+  month: string
+  items: {
+    [key: string]: number
+  }
+}
+
+export type SalesByMonth = {
+  month: string
+  sales: {
+    [key: string]: number
+  }
+}

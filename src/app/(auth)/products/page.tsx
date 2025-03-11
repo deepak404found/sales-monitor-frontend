@@ -1,5 +1,5 @@
 'use client'
-import { Button, debounce, Slider } from '@mui/material'
+import { Button, debounce } from '@mui/material'
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'

@@ -18,7 +18,9 @@ export default function AuthLayout({
         <SideBar />
 
         {/* content */}
-        <Stack p={2}>{children}</Stack>
+        <Stack p={2} width={'100%'}>
+          {children}
+        </Stack>
       </Stack>
       {/* end side bar and content */}
     </Stack>

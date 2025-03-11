@@ -15,7 +15,7 @@ const TopBar = () => {
   const { handleLogout } = useAuth()
   return (
     <AppBar
-      position="static"
+      position="sticky"
       sx={{
         px: 4,
         py: 1,

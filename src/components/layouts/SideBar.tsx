@@ -31,6 +31,7 @@ export const SideBar = () => {
           boxSizing: 'border-box',
           py: 1,
         },
+        zIndex: 1,
       }}
       open={true}
     >

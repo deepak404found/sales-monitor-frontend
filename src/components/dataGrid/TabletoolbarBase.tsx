@@ -1,6 +1,7 @@
 import {
   GridToolbarColumnsButton,
   GridToolbarContainer,
+  useGridApiContext,
 } from '@mui/x-data-grid'
 import React from 'react'
 // import { ExportModal, useToggleExportModal } from '../modals/ExportModal'
@@ -50,20 +51,7 @@ interface TableToolbarBaseProps {
    * @optional if not provided, it will be an empty object and the export button will not be shown
    **/
   exportProps?: {
-    /**
-     * @description object of variables to be exported
-     * @optional if not provided, it will be empty object
-     **/
-    exportVars?: unknown
-
-    /**
-     * @description export function to export the data from the table
-     * @optional if not provided, it will be a function that returns an empty array
-     * @param variables is an object
-     * @param columns is an array of strings
-     * @returns a promise
-     **/
-    exporter?: (variables: unknown, columns: string[]) => Promise<unknown[]>
+    showExportButton?: boolean
 
     /**
      * @description color of the export button
@@ -272,7 +260,7 @@ export const TableToolbarBase = ({
   paginationProps,
   actionAlign = 'start',
 }: TableToolbarBaseProps) => {
-  // const apiRef = useGridApiContext()
+  const apiRef = useGridApiContext()
   // const { openExpModal, setOpenExpModal } = useToggleExportModal()
 
   return (
@@ -315,23 +303,24 @@ export const TableToolbarBase = ({
           gap={'8px'}
           alignItems={'center'}
           // maxWidth={'79%'}
-          // width={'100%'}
+          width={'100%'}
         >
           {/* actions */}
           <Stack direction={'row'} gap={'8px'} alignItems={'center'}>
             {/* export button */}
-            {exportProps && (
+            {exportProps?.showExportButton && (
               <Stack direction={'row'} gap={'8px'} alignItems={'center'}>
                 <Button
                   variant={exportProps?.btnVariant || 'outlined'}
                   size="medium"
-                  color={exportProps?.color || 'secondary'}
+                  color={exportProps?.color || 'primary'}
                   sx={{
                     height: '40px',
                   }}
                   onClick={() => {
-                    // setOpenExpModal(true)
-                    console.log('Export')
+                    apiRef.current.exportDataAsCsv({
+                      fileName: 'exported_data',
+                    })
                   }}
                   startIcon={
                     actionAlign === 'start'
@@ -391,6 +380,7 @@ export const TableToolbarBase = ({
               }}
               sx={{
                 px: 1,
+                minWidth: '400px',
               }}
             />
           )}

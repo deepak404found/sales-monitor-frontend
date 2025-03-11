@@ -20,6 +20,7 @@ export type ListProductsFilter = {
 export const useProducts = () => {
   const [products, setProducts] = useState<ProductsList | null>(null)
   const [categories, setCategories] = useState<string[] | null>(null)
+  const [price_range, setPriceRange] = useState<number[] | null>(null)
   const [loading, setLoading] = useState<boolean>(false)
   const [productsFilter, setProductsFilter] = useState<ListProductsFilter>({
     offset: 0,
@@ -109,7 +110,6 @@ export const useProducts = () => {
     [authConfig.headers, productsApiPath]
   )
 
-  // list categories
   /**
    * Fetch all categories from the server and store them in the state.{@link categories}
    *
@@ -166,6 +166,67 @@ export const useProducts = () => {
     [authConfig.headers, productsApiPath]
   )
 
+  /**
+   * Fetch price range from the server and store them in the state.{@link price_range}
+   *
+   * @param cb - callback function. It will be called after fetching data. (data?: number[]) => void
+   * @param errCb - error callback function. It will be called if there is an error while fetching data. (err?: unknown) => void
+   *
+   */
+  const fetchPriceRange = useCallback(
+    async (cb?: (data?: number[]) => void, errCb?: (err?: unknown) => void) => {
+      try {
+        console.log('Fetching price range')
+
+        // call api to fetch price range
+        axios
+          .get(`${productsApiPath}/price_range`, {
+            headers: authConfig.headers,
+          })
+          .then((res) => {
+            if (res?.data) {
+              setPriceRange([
+                res.data.min_price,
+                res.data.max_price,
+              ] as number[])
+              return cb && cb(res.data)
+            }
+
+            console.error('Error fetching price range', res)
+            MySwal.fire({
+              icon: 'error',
+              title: 'Error fetching price range',
+              text: `Error fetching price range: ${
+                res?.data?.message || 'Unknown error'
+              }`,
+            })
+            return errCb && errCb(res)
+          })
+          .catch((error) => {
+            console.error('Error fetching price range', error?.response)
+            const errorMsg = error?.response?.data?.message || error.message
+            MySwal.fire({
+              icon: 'error',
+              title: 'Error fetching price range',
+              text: `Error fetching price range: ${
+                errorMsg || 'Unknown error'
+              }`,
+            })
+            return errCb && errCb(error)
+          })
+      } catch (error) {
+        console.error('Error fetching price range', error)
+        MySwal.fire({
+          icon: 'error',
+          title: 'Error fetching price range',
+          text: `Error fetching price range`,
+        })
+        return errCb && errCb(error)
+      }
+    },
+    [authConfig.headers, productsApiPath]
+  )
+
   return {
     products,
     loading,
@@ -174,5 +235,7 @@ export const useProducts = () => {
     setProductsFilter,
     listCategories,
     categories,
+    fetchPriceRange,
+    price_range,
   }
 }

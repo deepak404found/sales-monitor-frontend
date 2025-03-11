@@ -1,5 +1,5 @@
 'use client'
-import { Slider } from '@mui/material'
+import { Button, debounce, Slider } from '@mui/material'
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
@@ -20,7 +20,8 @@ import {
   useProducts,
 } from '@sales-monitor-frontend/hooks/products'
 import dayjs from 'dayjs'
-import React, { JSXElementConstructor } from 'react'
+import React, { JSXElementConstructor, useMemo } from 'react'
+import RestoreIcon from '@mui/icons-material/Restore'
 
 export default function ProductsPage() {
   const {
@@ -31,12 +32,15 @@ export default function ProductsPage() {
     setProductsFilter,
     categories,
     listCategories,
+    fetchPriceRange,
+    price_range,
   } = useProducts()
 
   React.useEffect(
     () => {
       listProducts(productsFilter)
       listCategories()
+      fetchPriceRange()
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -44,8 +48,19 @@ export default function ProductsPage() {
 
   // console.log(products)
 
+  // Memoize the debounced function to avoid recreating it on every render
+  const debouncedListProducts = useMemo(
+    () =>
+      debounce((newFilters: ListProductsFilter) => {
+        listProducts(newFilters)
+      }, 1000), // 500ms debounce
+    [listProducts]
+  )
+
+  console.log(price_range)
+
   return (
-    <Stack spacing={2}>
+    <Stack spacing={3}>
       {/* title */}
       <Typography variant="h4">Products</Typography>
 
@@ -107,13 +122,13 @@ export default function ProductsPage() {
           <Typography>Price range</Typography>
           {/* <Slider
             getAriaLabel={() => 'Price range'}
-            valueLabelFormat={(value) => `$${value}`}
+            valueLabelFormat={(value) => `₹${value}`}
             value={
               productsFilter.price_min && productsFilter.price_max
                 ? [productsFilter.price_min, productsFilter.price_max]
-                : [0, 1200]
+                : [0, 100]
             }
-            max={1200}
+            max={price_range ? price_range[1] : 100}
             min={0}
             step={10}
             onChange={(_, value) => {
@@ -121,26 +136,23 @@ export default function ProductsPage() {
                 const newFilters = {
                   ...prev,
                   price_min: Array.isArray(value) ? value[0] : 0,
-                  price_max: Array.isArray(value) ? value[1] : 1200,
+                  price_max: Array.isArray(value) ? value[1] : 100,
                   offset: 0,
                 } as ListProductsFilter
 
-                listProducts(newFilters)
+                debouncedListProducts(newFilters)
 
-                // debounce(() => {
-                //                 return onSearch && onSearch(e)
-                //               }, 1000)()
-
-                // debounce(() => {
-                //   listProducts(newFilters)
-                // }, 1000)()
                 return newFilters
               })
             }}
-            getAriaValueText={(value) => `$${value}`}
+            getAriaValueText={(value) => `₹${value}`}
             valueLabelDisplay="auto"
             disableSwap
+            sx={{
+              width: 300,
+            }}
           /> */}
+
           <CustomOutlinedInput
             type="number"
             value={productsFilter.price_min || ''}
@@ -154,11 +166,13 @@ export default function ProductsPage() {
                   offset: 0,
                 } as ListProductsFilter
 
-                listProducts(newFilters)
+                debouncedListProducts(newFilters)
                 return newFilters
               })
             }}
           />
+
+          <Typography>to</Typography>
 
           <CustomOutlinedInput
             type="number"
@@ -173,7 +187,7 @@ export default function ProductsPage() {
                   offset: 0,
                 } as ListProductsFilter
 
-                listProducts(newFilters)
+                debouncedListProducts(newFilters)
                 return newFilters
               })
             }}
@@ -182,6 +196,24 @@ export default function ProductsPage() {
         {/* end price range */}
 
         {/* reset button */}
+        <Button
+          variant="outlined"
+          onClick={() => {
+            setProductsFilter(() => {
+              const newFilters = {
+                offset: 0,
+                limit: 10,
+              } as ListProductsFilter
+
+              listProducts(newFilters)
+              return newFilters
+            })
+          }}
+          startIcon={<RestoreIcon />}
+        >
+          Reset
+        </Button>
+        {/* end reset button */}
       </Stack>
       {/* end filter bar */}
 
@@ -406,7 +438,7 @@ const CustomToolbar = ({
 }) => {
   return (
     <TableToolbarBase
-      actionAlign="end"
+      actionAlign="start"
       onSearch={(e) => {
         setProductsFilter((prev) => {
           const newFilters = {
@@ -417,23 +449,8 @@ const CustomToolbar = ({
           return newFilters
         })
       }}
-      // exportProps={{
-      //   exporter(variables, columns) {
-      //     console.log(variables, columns)
-      //     return Promise.resolve([])
-      //   },
-      // }}
-      refreshProps={{
-        onRefresh: () => {
-          setProductsFilter((prev) => {
-            const newFilters = {
-              ...prev,
-            }
-            listProducts(newFilters)
-            return newFilters
-          })
-        },
-        color: 'info',
+      exportProps={{
+        showExportButton: true,
       }}
     />
   )

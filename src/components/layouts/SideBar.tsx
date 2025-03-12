@@ -8,6 +8,7 @@ import {
 import { usePathname, useRouter } from 'next/navigation'
 import React from 'react'
 import { IRoutesDetails } from '../../utils/types'
+import { blue } from '@mui/material/colors'
 
 export const SideBar = () => {
   const [currentPath, setCurrentPath] = React.useState<string>('')
@@ -64,18 +65,19 @@ const RouteBtn = ({
     <ListItemButton
       onClick={onClick}
       sx={{
-        color: selected ? 'white' : 'black',
-        bgcolor: selected ? 'primary.light' : 'transparent',
+        color: selected ? blue[800] : 'black',
+        bgcolor: selected ? blue[50] : 'transparent',
         // borderStartStartRadius: 20,
         // borderEndStartRadius: 20,
         fontWeight: selected ? 'bold' : 'normal',
         '&:hover': {
           opacity: 0.8,
-          bgcolor: selected ? 'primary.light' : 'grey.200',
+          bgcolor: selected ? blue[50] : 'grey.100',
         },
         gap: 2,
         alignItems: 'center',
         px: 4,
+        py: 1.5,
         transition: 'all 0.3s',
       }}
     >

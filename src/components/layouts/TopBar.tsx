@@ -20,7 +20,13 @@ const TopBar = () => {
         px: 4,
         py: 1,
         height: topBarHeight,
-        zIndex: (theme) => theme.zIndex.drawer + 1,
+        // zIndex: (theme) => theme.zIndex.drawer + 1,
+        bgcolor: 'background.paper',
+        color: 'grey.800',
+        boxShadow: 'none',
+        borderBottom: '1px solid',
+        borderColor: 'divider',
+        zIndex: 2,
       }}
     >
       {/* wrapper */}

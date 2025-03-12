@@ -3,6 +3,7 @@ import { useCallback, useState } from 'react'
 import { useApi } from '../api'
 import { ItemsByMonth, ProductsList, SalesByMonth } from '../../utils/types'
 import { MySwal } from '@sales-monitor-frontend/utils/helpers'
+import dayjs from 'dayjs'
 
 export type ListProductsFilter = {
   offset: number
@@ -266,7 +267,15 @@ export const useProductCharts = () => {
           })
           .then((res) => {
             if (res?.data) {
-              setSalesChart(res.data)
+              const lastMonth = dayjs(res.data[res.data.length - 1]?.month)
+              const upcomingMonths = Array.from(
+                { length: 3 - res.data.length },
+                (_, i) => ({
+                  month: lastMonth.add(i + 1, 'month').format('MMM YYYY'),
+                  sales: 0,
+                })
+              )
+              setSalesChart([...res.data, ...upcomingMonths])
               return cb && cb(res.data)
             }
 
@@ -327,7 +336,15 @@ export const useProductCharts = () => {
           })
           .then((res) => {
             if (res?.data) {
-              setItemsChart(res.data)
+              const lastMonth = dayjs(res.data[res.data.length - 1]?.month)
+              const upcomingMonths = Array.from(
+                { length: 3 - res.data.length },
+                (_, i) => ({
+                  month: lastMonth.add(i + 1, 'month').format('MMM YYYY'),
+                  items: 0,
+                })
+              )
+              setItemsChart([...res.data, ...upcomingMonths])
               return cb && cb(res.data)
             }
 

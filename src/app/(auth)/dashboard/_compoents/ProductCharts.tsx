@@ -8,6 +8,14 @@ import React, { useEffect } from 'react'
 import { BarChart } from '@mui/x-charts/BarChart'
 import Typography from '@mui/material/Typography'
 import { axisClasses } from '@mui/x-charts/ChartsAxis'
+import {
+  cyan,
+  deepOrange,
+  deepPurple,
+  indigo,
+  lightGreen,
+  teal,
+} from '@mui/material/colors'
 
 export const ProductCharts = () => {
   const { fetchItemsChart, fetchSalesChart, items_chart, sales_chart } =
@@ -65,6 +73,15 @@ export const ProductCharts = () => {
                 padding: -5,
               },
             }}
+            colors={[
+              teal[300],
+              cyan[300],
+              lightGreen[300],
+              indigo[300],
+              deepPurple[300],
+              deepOrange[300],
+            ]}
+            borderRadius={4}
           />
         </Stack>
       )}
@@ -115,6 +132,15 @@ export const ProductCharts = () => {
                 padding: -5,
               },
             }}
+            colors={[
+              teal[300],
+              cyan[300],
+              lightGreen[300],
+              indigo[300],
+              deepPurple[300],
+              deepOrange[300],
+            ]}
+            borderRadius={4}
           />
         </Stack>
       )}

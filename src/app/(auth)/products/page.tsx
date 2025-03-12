@@ -22,6 +22,7 @@ import {
 import dayjs from 'dayjs'
 import React, { JSXElementConstructor, useMemo } from 'react'
 import RestoreIcon from '@mui/icons-material/Restore'
+import { green, red } from '@mui/material/colors'
 
 export default function ProductsPage() {
   const {
@@ -367,11 +368,15 @@ export default function ProductsPage() {
                     alignItems: 'center',
                   }}
                   sx={{
-                    color: 'white',
-                    bgcolor:
-                      params.value == 'Yes' ? 'success.light' : 'error.light',
-                    p: 1,
+                    color: params.value == 'Yes' ? green[900] : red[900],
+                    bgcolor: params.value == 'Yes' ? green[100] : red[100],
+                    px: 2,
+                    py: 1,
+                    minWidth: 30,
                     borderRadius: 2,
+                    textTransform: 'uppercase',
+                    textAlign: 'center',
+                    fontSize: 14,
                   }}
                 />
               ),
@@ -391,11 +396,15 @@ export default function ProductsPage() {
                     alignItems: 'center',
                   }}
                   sx={{
-                    color: 'white',
-                    bgcolor:
-                      params.value == 'Yes' ? 'success.light' : 'error.light',
-                    p: 1,
+                    color: params.value == 'Yes' ? green[900] : red[900],
+                    bgcolor: params.value == 'Yes' ? green[100] : red[100],
+                    px: 2,
+                    py: 1,
+                    minWidth: 30,
                     borderRadius: 2,
+                    textTransform: 'uppercase',
+                    textAlign: 'center',
+                    fontSize: 14,
                   }}
                 />
               ),

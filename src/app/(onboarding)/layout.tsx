@@ -1,4 +1,5 @@
 import { Stack, Typography } from '@mui/material'
+import { grey } from '@mui/material/colors'
 import Image from 'next/image'
 
 export default function OnboardingLayout({
@@ -14,7 +15,7 @@ export default function OnboardingLayout({
         alignItems: 'center',
         justifyContent: 'center',
         // bgcolor: green[100],
-        bgcolor: 'primary.main',
+        bgcolor: grey[300],
       }}
     >
       {/* onboarding card */}

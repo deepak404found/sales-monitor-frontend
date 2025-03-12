@@ -1,5 +1,4 @@
 import Box from '@mui/material/Box'
-import { grey } from '@mui/material/colors'
 import LinearProgress from '@mui/material/LinearProgress'
 import Pagination from '@mui/material/Pagination'
 import { styled, SxProps } from '@mui/material/styles'
@@ -90,7 +89,7 @@ export const CustomLoadingOverlay = () => {
 }
 export const StyledDataGrid = styled(DataGrid)(() => {
   // const tableBackgroundColor = theme.palette.background.paper
-  const tableBackgroundColor = grey[100]
+  const tableBackgroundColor = 'transparent'
   return {
     borderRadius: '8px',
     // color: 'grey',

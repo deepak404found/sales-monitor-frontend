@@ -4,7 +4,7 @@ import ProductCharts from './_compoents/ProductCharts'
 
 export default function DashboardPage() {
   return (
-    <Stack spacing={2}>
+    <Stack spacing={4}>
       <Typography variant="h4">Dashboard</Typography>
 
       {/* carts */}

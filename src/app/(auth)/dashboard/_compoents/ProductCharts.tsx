@@ -39,7 +39,7 @@ export const ProductCharts = () => {
     <Stack direction={{ xs: 'column', sm: 'row' }} width={'100%'}>
       {/* items chart */}
       {categories && items_chart && (
-        <Stack spacing={2} width={'100%'}>
+        <Stack width={'100%'}>
           <Typography variant="h6">
             Total Items in Each Category (Monthly):
           </Typography>
@@ -58,7 +58,6 @@ export const ProductCharts = () => {
             }
             xAxis={[
               {
-                id: 'month',
                 data: items_chart?.map((item) => item.month),
                 scaleType: 'band',
               },
@@ -69,13 +68,20 @@ export const ProductCharts = () => {
                 scaleType: 'linear',
               },
             ]}
+            slotProps={{
+              legend: {
+                direction: 'row',
+                position: { vertical: 'bottom', horizontal: 'middle' },
+                padding: -5,
+              },
+            }}
           />
         </Stack>
       )}
 
       {/* sales chart */}
       {categories && sales_chart && (
-        <Stack spacing={2} width={'100%'}>
+        <Stack width={'100%'}>
           <Typography variant="h6">
             Category-Wise Sales Amount (Monthly):
           </Typography>
@@ -110,6 +116,13 @@ export const ProductCharts = () => {
             sx={{
               [`.${axisClasses.left} .${axisClasses.label}`]: {
                 transform: 'translate(-12px, 0)',
+              },
+            }}
+            slotProps={{
+              legend: {
+                direction: 'row',
+                position: { vertical: 'bottom', horizontal: 'middle' },
+                padding: -5,
               },
             }}
           />

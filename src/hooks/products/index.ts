@@ -44,8 +44,6 @@ export const useProducts = () => {
       errCb?: (err?: unknown) => void
     ) => {
       try {
-        console.log('Fetching products', filter, filter.is_sold || undefined)
-
         // start loading
         setLoading(true)
 
@@ -120,7 +118,7 @@ export const useProducts = () => {
   const listCategories = useCallback(
     async (cb?: (data?: string[]) => void, errCb?: (err?: unknown) => void) => {
       try {
-        console.log('Fetching categories')
+        // console.log('Fetching categories')
 
         // call api to fetch categories
         axios
@@ -176,7 +174,7 @@ export const useProducts = () => {
   const fetchPriceRange = useCallback(
     async (cb?: (data?: number[]) => void, errCb?: (err?: unknown) => void) => {
       try {
-        console.log('Fetching price range')
+        // console.log('Fetching price range')
 
         // call api to fetch price range
         axios
@@ -259,7 +257,7 @@ export const useProductCharts = () => {
       errCb?: (err?: unknown) => void
     ) => {
       try {
-        console.log('Fetching sales chart')
+        // console.log('Fetching sales chart')
 
         // call api to fetch sales chart
         axios
@@ -320,7 +318,7 @@ export const useProductCharts = () => {
       errCb?: (err?: unknown) => void
     ) => {
       try {
-        console.log('Fetching items chart')
+        // console.log('Fetching items chart')
 
         // call api to fetch items chart
         axios

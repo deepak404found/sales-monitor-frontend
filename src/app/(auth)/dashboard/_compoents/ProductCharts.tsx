@@ -25,16 +25,6 @@ export const ProductCharts = () => {
     []
   )
 
-  console.log(
-    'items_chart',
-    categories,
-
-    categories?.map((category) => ({
-      label: category,
-      data: items_chart?.map((item) => item.items[category] || 0),
-    })) || []
-  )
-
   return (
     <Stack direction={{ xs: 'column', sm: 'row' }} width={'100%'}>
       {/* items chart */}

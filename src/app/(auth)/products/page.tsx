@@ -33,7 +33,7 @@ export default function ProductsPage() {
     categories,
     listCategories,
     fetchPriceRange,
-    price_range,
+    // price_range,
   } = useProducts()
 
   React.useEffect(
@@ -53,8 +53,6 @@ export default function ProductsPage() {
       }, 1000),
     [listProducts]
   )
-
-  console.log(price_range)
 
   return (
     <Stack spacing={3}>

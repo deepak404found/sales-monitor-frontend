@@ -1,6 +1,6 @@
 'use client'
 import RestoreIcon from '@mui/icons-material/Restore'
-import { Button, debounce, Slider } from '@mui/material'
+import { Button, debounce } from '@mui/material'
 import Box from '@mui/material/Box'
 import { green, red } from '@mui/material/colors'
 import Stack from '@mui/material/Stack'
@@ -14,6 +14,7 @@ import {
 import { AvatarCell } from '@sales-monitor-frontend/components/dataGrid/cells/AvatarCell'
 import TextCell from '@sales-monitor-frontend/components/dataGrid/cells/TextCell'
 import { TableToolbarBase } from '@sales-monitor-frontend/components/dataGrid/TabletoolbarBase'
+import CustomOutlinedInput from '@sales-monitor-frontend/components/inputs/InputField'
 import { TablePagination } from '@sales-monitor-frontend/components/pagination'
 import { CustomSelect } from '@sales-monitor-frontend/components/select'
 import {
@@ -33,7 +34,7 @@ export default function ProductsPage() {
     categories,
     listCategories,
     fetchPriceRange,
-    price_range,
+    // price_range,
   } = useProducts()
 
   React.useEffect(
@@ -133,41 +134,9 @@ export default function ProductsPage() {
         {/* price range */}
         <Stack direction={'row'} spacing={2} alignItems="center">
           <Typography>Price range</Typography>
-          <Slider
-            getAriaLabel={() => 'Price range'}
-            valueLabelFormat={(value) => `₹${value}`}
-            value={
-              productsFilter.price_min && productsFilter.price_max
-                ? [productsFilter.price_min, productsFilter.price_max]
-                : [0, price_range ? price_range[1] : 100]
-            }
-            max={price_range ? price_range[1] : 100}
-            min={0}
-            step={10}
-            onChange={(_, value) => {
-              setProductsFilter((prev) => {
-                const newFilters = {
-                  ...prev,
-                  price_min: Array.isArray(value) ? value[0] : 0,
-                  price_max: Array.isArray(value) ? value[1] : 100,
-                  offset: 0,
-                } as ListProductsFilter
-
-                debouncedListProducts(newFilters)
-
-                return newFilters
-              })
-            }}
-            getAriaValueText={(value) => `₹${value}`}
-            valueLabelDisplay="auto"
-            disableSwap
-            sx={{
-              width: 300,
-            }}
-          />
-
-          {/* <CustomOutlinedInput
+          <CustomOutlinedInput
             type="number"
+            placeholder="min"
             value={productsFilter.price_min || ''}
             onChange={(value) => {
               setProductsFilter((prev) => {
@@ -183,12 +152,16 @@ export default function ProductsPage() {
                 return newFilters
               })
             }}
+            sx={{
+              width: 80,
+            }}
           />
 
           <Typography>to</Typography>
 
           <CustomOutlinedInput
             type="number"
+            placeholder="max"
             value={productsFilter.price_max || ''}
             onChange={(value) => {
               setProductsFilter((prev) => {
@@ -204,7 +177,10 @@ export default function ProductsPage() {
                 return newFilters
               })
             }}
-          /> */}
+            sx={{
+              width: 80,
+            }}
+          />
         </Stack>
         {/* end price range */}
 

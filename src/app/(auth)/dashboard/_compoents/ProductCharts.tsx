@@ -1,13 +1,5 @@
 'use client'
-import Stack from '@mui/material/Stack'
-import {
-  useProductCharts,
-  useProducts,
-} from '@sales-monitor-frontend/hooks/products'
-import React, { useEffect } from 'react'
-import { BarChart } from '@mui/x-charts/BarChart'
-import Typography from '@mui/material/Typography'
-import { axisClasses } from '@mui/x-charts/ChartsAxis'
+import { useTheme } from '@mui/material'
 import {
   cyan,
   deepOrange,
@@ -16,11 +8,20 @@ import {
   lightGreen,
   teal,
 } from '@mui/material/colors'
+import Stack from '@mui/material/Stack'
+import Typography from '@mui/material/Typography'
+import { BarChart, BarChartProps } from '@mui/x-charts/BarChart'
+import {
+  useProductCharts,
+  useProducts,
+} from '@sales-monitor-frontend/hooks/products'
+import React, { useEffect } from 'react'
 
 export const ProductCharts = () => {
   const { fetchItemsChart, fetchSalesChart, items_chart, sales_chart } =
     useProductCharts()
   const { categories, listCategories } = useProducts()
+  const theme = useTheme()
 
   // fetch data
   useEffect(
@@ -32,9 +33,49 @@ export const ProductCharts = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   )
+  const width = window ? window.innerWidth : 0
+
+  const chartSettings: BarChartProps = {
+    height: 400,
+    tooltip: {
+      trigger: 'item',
+    },
+    xAxis: [
+      {
+        data: items_chart?.map((item) => item.month),
+        scaleType: 'band',
+      },
+    ],
+    yAxis: [
+      {
+        id: 'items',
+        scaleType: 'linear',
+      },
+    ],
+    slotProps: {
+      legend: {
+        direction: theme.breakpoints.values.md >= width ? 'column' : 'row',
+        position: {
+          vertical: theme.breakpoints.values.md >= width ? 'top' : 'bottom',
+          horizontal: theme.breakpoints.values.md >= width ? 'right' : 'middle',
+        },
+        padding: theme.breakpoints.values.md >= width ? 0 : -5,
+      },
+    },
+    colors: [
+      teal[300],
+      cyan[300],
+      lightGreen[300],
+      indigo[300],
+      deepPurple[300],
+      deepOrange[300],
+    ],
+    borderRadius: 4,
+    series: [],
+  }
 
   return (
-    <Stack direction={{ xs: 'column', sm: 'row' }} width={'100%'}>
+    <Stack direction={{ md: 'column', lg: 'row' }} width={'100%'}>
       {/* items chart */}
       {categories && items_chart && (
         <Stack width={'100%'}>
@@ -43,45 +84,14 @@ export const ProductCharts = () => {
           </Typography>
 
           <BarChart
-            height={400}
             // title="Items"
-            tooltip={{
-              trigger: 'item',
-            }}
+            {...chartSettings}
             series={
               categories?.map((category) => ({
                 label: category,
                 data: items_chart?.map((item) => item.items[category] || 0),
               })) || []
             }
-            xAxis={[
-              {
-                data: items_chart?.map((item) => item.month),
-                scaleType: 'band',
-              },
-            ]}
-            yAxis={[
-              {
-                id: 'items',
-                scaleType: 'linear',
-              },
-            ]}
-            slotProps={{
-              legend: {
-                direction: 'row',
-                position: { vertical: 'bottom', horizontal: 'middle' },
-                padding: -5,
-              },
-            }}
-            colors={[
-              teal[300],
-              cyan[300],
-              lightGreen[300],
-              indigo[300],
-              deepPurple[300],
-              deepOrange[300],
-            ]}
-            borderRadius={4}
           />
         </Stack>
       )}
@@ -94,11 +104,8 @@ export const ProductCharts = () => {
           </Typography>
 
           <BarChart
-            height={400}
+            {...chartSettings}
             // title="Sales"
-            tooltip={{
-              trigger: 'item',
-            }}
             series={
               categories?.map((category) => ({
                 label: category,
@@ -106,41 +113,6 @@ export const ProductCharts = () => {
                 valueFormatter: (value) => `₹ ${value}`,
               })) || []
             }
-            xAxis={[
-              {
-                id: 'month',
-                data: sales_chart?.map((item) => item.month),
-                scaleType: 'band',
-              },
-            ]}
-            yAxis={[
-              {
-                id: 'sales',
-                scaleType: 'linear',
-                label: 'Sales Amount (Rs.)',
-              },
-            ]}
-            sx={{
-              [`.${axisClasses.left} .${axisClasses.label}`]: {
-                transform: 'translate(-12px, 0)',
-              },
-            }}
-            slotProps={{
-              legend: {
-                direction: 'row',
-                position: { vertical: 'bottom', horizontal: 'middle' },
-                padding: -5,
-              },
-            }}
-            colors={[
-              teal[300],
-              cyan[300],
-              lightGreen[300],
-              indigo[300],
-              deepPurple[300],
-              deepOrange[300],
-            ]}
-            borderRadius={4}
           />
         </Stack>
       )}

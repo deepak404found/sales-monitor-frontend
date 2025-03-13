@@ -40,6 +40,12 @@ export default function OnboardingLayout({
             minHeight: 550,
             px: '32px',
             zIndex: 1,
+            display: {
+              xs: 'none',
+              sm: 'none',
+              md: 'flex',
+              lg: 'flex',
+            },
           }}
           spacing={4}
         >

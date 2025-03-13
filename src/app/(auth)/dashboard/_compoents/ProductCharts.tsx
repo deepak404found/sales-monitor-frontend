@@ -42,7 +42,7 @@ export const ProductCharts = () => {
     },
     xAxis: [
       {
-        data: items_chart?.map((item) => item.month),
+        data: items_chart?.map((item) => item.month) || [],
         scaleType: 'band',
       },
     ],

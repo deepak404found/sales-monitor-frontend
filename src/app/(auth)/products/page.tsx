@@ -207,7 +207,17 @@ export default function ProductsPage() {
       {/* end filter bar */}
 
       {/* products table */}
-      <Box sx={{ width: 'auto', height: '100%' }}>
+      <Box
+        sx={{
+          width: {
+            xs: '94%',
+            sm: '94%',
+            md: '100%',
+            lg: '100%',
+          },
+          height: '100%',
+        }}
+      >
         <StyledDataGrid
           loading={loading}
           // autoHeight
@@ -297,12 +307,14 @@ export default function ProductsPage() {
               field: 'title',
               headerName: 'Title',
               flex: 0.6,
+              minWidth: 150,
               renderCell: (params) => <TextCell text={params.value} />,
             },
             {
               field: 'price',
               headerName: 'Price',
               flex: 0.5,
+              minWidth: 150,
               headerAlign: 'center',
               align: 'center',
               renderCell: (params) => (
@@ -319,12 +331,14 @@ export default function ProductsPage() {
               field: 'description',
               headerName: 'Description',
               flex: 1.3,
+              minWidth: 200,
               renderCell: (params) => <TextCell text={params.value} />,
             },
             {
               field: 'category',
               headerName: 'Category',
               flex: 0.5,
+              minWidth: 140,
               headerAlign: 'center',
               align: 'center',
               renderCell: (params) => (
@@ -341,6 +355,7 @@ export default function ProductsPage() {
               field: 'image',
               headerName: 'Image',
               flex: 0.2,
+              minWidth: 120,
               // renderCell: (params) => <TextCell text={params.value} />,
               renderCell: (params) => (
                 <AvatarCell src={params.value} tooltip={params.value} />
@@ -350,6 +365,7 @@ export default function ProductsPage() {
               field: 'sold',
               headerName: 'Sold',
               flex: 0.4,
+              minWidth: 140,
               headerAlign: 'center',
               align: 'center',
               valueGetter: (params: boolean) => (params ? 'Yes' : 'No'),
@@ -378,6 +394,7 @@ export default function ProductsPage() {
               field: 'is_sale',
               headerName: 'Is Sale',
               flex: 0.4,
+              minWidth: 150,
               headerAlign: 'center',
               align: 'center',
               valueGetter: (params: boolean) => (params ? 'Yes' : 'No'),
@@ -406,6 +423,7 @@ export default function ProductsPage() {
               field: 'date_of_sale',
               headerName: 'Date Of Sale',
               flex: 0.5,
+              minWidth: 200,
               renderCell: (params) => (
                 <TextCell
                   text={

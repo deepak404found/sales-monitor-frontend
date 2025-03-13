@@ -2,20 +2,25 @@
 import Avatar from '@mui/material/Avatar'
 import Tooltip from '@mui/material/Tooltip'
 import { SxProps } from '@mui/material/styles'
+import React from 'react'
 
 export const AvatarCell = ({
   src,
+  fallbackSrc,
   variant = 'circular',
   size = 'medium',
   tooltip,
   sx,
 }: {
   src: string
+  fallbackSrc?: string
   variant?: 'circular' | 'rounded' | 'square'
   size?: 'small' | 'medium'
   tooltip?: string
   sx?: SxProps
 }) => {
+  const [image, setImage] = React.useState(src)
+
   return (
     <Tooltip
       title={tooltip}
@@ -25,7 +30,7 @@ export const AvatarCell = ({
       leaveTouchDelay={5000}
     >
       <Avatar
-        src={src}
+        src={image}
         sx={{
           width:
             size === 'small' ? '32px' : size === 'medium' ? '40px' : '56px',
@@ -38,6 +43,7 @@ export const AvatarCell = ({
           ...sx,
         }}
         variant={variant}
+        onError={() => setImage(fallbackSrc || '')}
       />
     </Tooltip>
   )

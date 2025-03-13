@@ -358,7 +358,14 @@ export default function ProductsPage() {
               minWidth: 120,
               // renderCell: (params) => <TextCell text={params.value} />,
               renderCell: (params) => (
-                <AvatarCell src={params.value} tooltip={params.value} />
+                <AvatarCell
+                  src={params.value}
+                  tooltip={params.value}
+                  fallbackSrc="https://www.svgrepo.com/show/422038/product.svg"
+                  sx={{
+                    border: 0,
+                  }}
+                />
               ),
             },
             {

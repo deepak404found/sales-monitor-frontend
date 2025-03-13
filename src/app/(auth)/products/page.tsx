@@ -1,6 +1,8 @@
 'use client'
-import { Button, debounce } from '@mui/material'
+import RestoreIcon from '@mui/icons-material/Restore'
+import { Button, debounce, Slider } from '@mui/material'
 import Box from '@mui/material/Box'
+import { green, red } from '@mui/material/colors'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import { GridToolbarProps } from '@mui/x-data-grid'
@@ -12,7 +14,6 @@ import {
 import { AvatarCell } from '@sales-monitor-frontend/components/dataGrid/cells/AvatarCell'
 import TextCell from '@sales-monitor-frontend/components/dataGrid/cells/TextCell'
 import { TableToolbarBase } from '@sales-monitor-frontend/components/dataGrid/TabletoolbarBase'
-import CustomOutlinedInput from '@sales-monitor-frontend/components/inputs/InputField'
 import { TablePagination } from '@sales-monitor-frontend/components/pagination'
 import { CustomSelect } from '@sales-monitor-frontend/components/select'
 import {
@@ -21,8 +22,6 @@ import {
 } from '@sales-monitor-frontend/hooks/products'
 import dayjs from 'dayjs'
 import React, { JSXElementConstructor, useMemo } from 'react'
-import RestoreIcon from '@mui/icons-material/Restore'
-import { green, red } from '@mui/material/colors'
 
 export default function ProductsPage() {
   const {
@@ -34,7 +33,7 @@ export default function ProductsPage() {
     categories,
     listCategories,
     fetchPriceRange,
-    // price_range,
+    price_range,
   } = useProducts()
 
   React.useEffect(
@@ -61,68 +60,86 @@ export default function ProductsPage() {
       <Typography variant="h4">Products</Typography>
 
       {/* filter bar */}
-      <Stack direction="row" spacing={2} alignItems="center">
-        {/* select category */}
-        <CustomSelect
-          label="Category"
-          options={[{ value: 'all', label: 'All' }].concat(
-            categories?.map((category) => ({
-              value: category,
-              label: category,
-            })) || []
-          )}
-          value={productsFilter.category || 'all'}
-          setvalue={(value) => {
-            setProductsFilter((prev) => {
-              const newFilters = {
-                ...prev,
-                category: value === 'all' ? null : value,
-                offset: 0,
-              } as ListProductsFilter
+      <Stack
+        direction={{
+          xs: 'column',
+          sm: 'column',
+          md: 'row',
+          lg: 'row',
+        }}
+        spacing={2}
+        alignItems={{
+          xs: 'flex-start',
+          sm: 'flex-start',
+          md: 'center',
+          lg: 'center',
+        }}
+      >
+        {/* category and sold select */}
+        <Stack direction="row" spacing={2} alignItems="center">
+          {/* select category */}
+          <CustomSelect
+            label="Category"
+            options={[{ value: 'all', label: 'All' }].concat(
+              categories?.map((category) => ({
+                value: category,
+                label: category,
+              })) || []
+            )}
+            value={productsFilter.category || 'all'}
+            setvalue={(value) => {
+              setProductsFilter((prev) => {
+                const newFilters = {
+                  ...prev,
+                  category: value === 'all' ? null : value,
+                  offset: 0,
+                } as ListProductsFilter
 
-              listProducts(newFilters)
-              return newFilters
-            })
-          }}
-        />
-        {/* end select category */}
+                listProducts(newFilters)
+                return newFilters
+              })
+            }}
+          />
+          {/* end select category */}
 
-        {/* sold select */}
-        <CustomSelect
-          label="Sold"
-          options={[
-            { value: 'all', label: 'All' },
-            { value: 'true', label: 'Yes' },
-            { value: 'false', label: 'No' },
-          ]}
-          value={
-            productsFilter.is_sold ? productsFilter.is_sold.toString() : 'all'
-          }
-          setvalue={(value) => {
-            setProductsFilter((prev) => {
-              const newFilters = {
-                ...prev,
-                is_sold: value === 'all' ? null : value,
-                offset: 0,
-              } as ListProductsFilter
+          {/* sold select */}
+          <CustomSelect
+            label="Sold"
+            options={[
+              { value: 'all', label: 'All' },
+              { value: 'true', label: 'Yes' },
+              { value: 'false', label: 'No' },
+            ]}
+            value={
+              productsFilter.is_sold ? productsFilter.is_sold.toString() : 'all'
+            }
+            setvalue={(value) => {
+              setProductsFilter((prev) => {
+                const newFilters = {
+                  ...prev,
+                  is_sold: value === 'all' ? null : value,
+                  offset: 0,
+                } as ListProductsFilter
 
-              listProducts(newFilters)
-              return newFilters
-            })
-          }}
-        />
-        {/* end sold select */}
+                listProducts(newFilters)
+                return newFilters
+              })
+            }}
+          />
+          {/* end sold select */}
+        </Stack>
+        {/* end category and sold select */}
 
         {/* price range */}
         <Stack direction={'row'} spacing={2} alignItems="center">
           <Typography>Price range</Typography>
-          {/* <Slider
+          <Slider
             getAriaLabel={() => 'Price range'}
             valueLabelFormat={(value) => `₹${value}`}
             value={
               productsFilter.price_min && productsFilter.price_max
                 ? [productsFilter.price_min, productsFilter.price_max]
-                : [0, 100]
+                : [0, price_range ? price_range[1] : 100]
             }
             max={price_range ? price_range[1] : 100}
             min={0}
@@ -147,9 +164,9 @@ export default function ProductsPage() {
             sx={{
               width: 300,
             }}
-          /> */}
+          />
 
-          <CustomOutlinedInput
+          {/* <CustomOutlinedInput
             type="number"
             value={productsFilter.price_min || ''}
             onChange={(value) => {
@@ -187,7 +204,7 @@ export default function ProductsPage() {
                 return newFilters
               })
             }}
-          />
+          /> */}
         </Stack>
         {/* end price range */}
 
@@ -214,7 +231,7 @@ export default function ProductsPage() {
       {/* end filter bar */}
 
       {/* products table */}
-      <Box sx={{ width: '100%', height: '100%' }}>
+      <Box sx={{ width: 'auto', height: '100%' }}>
         <StyledDataGrid
           loading={loading}
           // autoHeight

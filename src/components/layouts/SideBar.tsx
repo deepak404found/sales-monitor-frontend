@@ -16,10 +16,12 @@ import React from 'react'
 import { IRoutesDetails } from '../../utils/types'
 import { blue } from '@mui/material/colors'
 import { useDispatch, useSelector } from 'react-redux'
+import IconButton from '@mui/material/IconButton'
 import {
   selectLayout,
   toggleSidebar,
 } from '@sales-monitor-frontend/global/reducers/layouts'
+import CloseIcon from '@mui/icons-material/Close'
 
 export const SideBar = () => {
   const [currentPath, setCurrentPath] = React.useState<string>('')
@@ -58,6 +60,21 @@ export const SideBar = () => {
       open={layoutState.sidebarOpen}
       onClose={() => dispatch(toggleSidebar())}
     >
+      {/* close button */}
+      <IconButton
+        onClick={() => dispatch(toggleSidebar())}
+        sx={{
+          position: 'absolute',
+          top: 10,
+          right: 10,
+          zIndex: 1,
+          display: { xs: 'block', sm: 'none' },
+        }}
+      >
+        <CloseIcon />
+      </IconButton>
+      {/* end close button */}
+
       {/* routes */}
       <List>
         {appRoutes.map((route) => (
@@ -65,7 +82,10 @@ export const SideBar = () => {
             key={route.route}
             details={route}
             selected={currentPath === route.route}
-            onClick={() => router.push(route.route)}
+            onClick={() => {
+              router.push(route.route)
+              dispatch(toggleSidebar())
+            }}
           />
         ))}
       </List>

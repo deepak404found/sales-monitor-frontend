@@ -1,5 +1,11 @@
 'use client'
-import { Drawer, List, ListItemButton, Typography } from '@mui/material'
+import {
+  Drawer,
+  List,
+  ListItemButton,
+  Typography,
+  useTheme,
+} from '@mui/material'
 import {
   appRoutes,
   sidebarWidth,
@@ -9,32 +15,48 @@ import { usePathname, useRouter } from 'next/navigation'
 import React from 'react'
 import { IRoutesDetails } from '../../utils/types'
 import { blue } from '@mui/material/colors'
+import { useDispatch, useSelector } from 'react-redux'
+import {
+  selectLayout,
+  toggleSidebar,
+} from '@sales-monitor-frontend/global/reducers/layouts'
 
 export const SideBar = () => {
   const [currentPath, setCurrentPath] = React.useState<string>('')
   const path = usePathname()
   const router = useRouter()
+  const layoutState = useSelector(selectLayout)
+  const dispatch = useDispatch()
+  const theme = useTheme()
+  const width = window ? window.innerWidth : 0
 
   React.useEffect(() => {
     // find the current path on appRoutes
     setCurrentPath(appRoutes.find((route) => route.route === path)?.route || '')
   }, [path])
 
+  console.log('currentPath', layoutState)
+
   return (
     <Drawer
-      variant="permanent"
+      variant={theme.breakpoints.values.md > width ? 'temporary' : 'permanent'}
       sx={{
         width: sidebarWidth,
         flexShrink: 0,
         '& .MuiDrawer-paper': {
-          mt: `${topBarHeight}px`,
+          // paddingTop: topBarHeight,
           width: sidebarWidth,
           boxSizing: 'border-box',
-          py: 1,
+          py: `${topBarHeight}px`,
         },
-        zIndex: 1,
+        zIndex: {
+          sm: theme.zIndex.drawer + 1,
+          md: 1,
+          lg: 1,
+        },
       }}
-      open={true}
+      open={layoutState.sidebarOpen}
+      onClose={() => dispatch(toggleSidebar())}
     >
       {/* routes */}
       <List>

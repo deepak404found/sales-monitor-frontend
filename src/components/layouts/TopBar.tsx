@@ -1,23 +1,33 @@
 'use client'
 import LogoutIcon from '@mui/icons-material/Logout'
+import MenuIcon from '@mui/icons-material/Menu'
 import { AppBar } from '@mui/material'
 import Button from '@mui/material/Button'
+import IconButton from '@mui/material/IconButton'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import { getAuth } from '@sales-monitor-frontend/global/reducers/authReducer'
+import { toggleSidebar } from '@sales-monitor-frontend/global/reducers/layouts'
 import { useAuth } from '@sales-monitor-frontend/hooks/auth'
 import { topBarHeight } from '@sales-monitor-frontend/utils/helpers'
 import React from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 const TopBar = () => {
   const { user } = useSelector(getAuth)
   const { handleLogout } = useAuth()
+  const dispatch = useDispatch()
+
   return (
     <AppBar
       position="sticky"
       sx={{
-        px: 4,
+        px: {
+          xs: 1,
+          sm: 1,
+          md: 3,
+          lg: 3,
+        },
         py: 1,
         height: topBarHeight,
         // zIndex: (theme) => theme.zIndex.drawer + 1,
@@ -32,9 +42,39 @@ const TopBar = () => {
       {/* wrapper */}
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         {/* left section */}
-        <Stack direction="row" spacing={2}>
+        <Stack direction="row" spacing={0} alignItems="center">
+          {/* drawer toggle */}
+          <IconButton
+            onClick={() => {
+              dispatch(toggleSidebar())
+            }}
+            sx={{
+              display: {
+                xs: 'flex',
+                sm: 'flex',
+                md: 'none',
+                lg: 'none',
+              },
+            }}
+          >
+            <MenuIcon />
+          </IconButton>
+          {/* end drawer toggle */}
+
           {/* title */}
-          <Typography variant="h6">Sales Monitor</Typography>
+          <Typography
+            variant="h6"
+            sx={{
+              typography: {
+                xs: 'subtitle1',
+                sm: 'subtitle1',
+                md: 'h6',
+                lg: 'h6',
+              },
+            }}
+          >
+            Sales Monitor
+          </Typography>
         </Stack>
         {/* end left section */}
 

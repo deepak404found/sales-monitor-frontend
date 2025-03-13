@@ -13,6 +13,7 @@ import createWebStorage from 'redux-persist/lib/storage/createWebStorage'
 
 import alertReducer from './reducers/alert'
 import authReducer from './reducers/authReducer'
+import layoutReducer from './reducers/layouts'
 
 const createNoopStorage = () => {
   return {
@@ -43,6 +44,7 @@ const rootReducer = combineReducers({
   // Add reducers here
   alert: alertReducer,
   auth: authReducer,
+  layout: layoutReducer,
 })
 
 const persistedReducer = persistReducer(rootPersistConfig, rootReducer)

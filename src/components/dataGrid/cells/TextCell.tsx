@@ -13,12 +13,14 @@ export const TextCell = ({
   showCopyIcon = false,
   sx,
   stackSx,
+  disableTouchListener = true,
 }: {
   text?: string | number | null
   color?: string
   showCopyIcon?: boolean
   sx?: SxProps
   stackSx?: SxProps
+  disableTouchListener?: boolean
 }) => {
   // console.log('TextCell', text)
   const invalid = text === '' || text === undefined || text === null
@@ -29,6 +31,7 @@ export const TextCell = ({
       arrow
       enterTouchDelay={0}
       leaveTouchDelay={5000}
+      disableTouchListener={disableTouchListener}
     >
       <Stack
         direction="row"

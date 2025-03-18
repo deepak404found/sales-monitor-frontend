@@ -23,12 +23,12 @@ export type ListProductsFilter = {
 
 const ProductForm = z.object({
   title: z.string().nonempty('Please enter a valid title'),
-  price: z.number().min(0, 'Price must be greater than 0'),
+  price: z.string().nonempty('Please enter a valid price'),
   description: z.string().nonempty('Please enter a valid description'),
   category: z.string().nonempty('Please enter a valid category'),
   image: z.string().nonempty('Please enter a valid image url'),
-  sold: z.boolean(),
-  is_sale: z.boolean(),
+  sold: z.boolean().optional().default(false),
+  is_sale: z.boolean().optional().default(false),
   date_of_sale: z.string().optional(),
 })
 
@@ -47,7 +47,7 @@ export const useProduct = () => {
     resolver: zodResolver(ProductForm),
   })
 
-  const { productsApiPath } = useApi()
+  const { productsApiPath, authConfig } = useApi()
 
   /**
    * Add a new product to the server
@@ -55,54 +55,69 @@ export const useProduct = () => {
    * @param cb - callback function. It will be called after adding a new product. (data?: Product) => void
    * @param errCb - error callback function. It will be called if there is an error while adding a new product. (err?: unknown) => void
    */
-  const addProduct = useCallback(() => {
-    handleSubmit(
-      (data) => {
-        // console.log(data)
+  const addProduct = useCallback(
+    (
+      cb?: (data?: ProductFormType) => void,
+      errCb?: (err?: unknown) => void
+    ) => {
+      handleSubmit(
+        (data) => {
+          // console.log(data)
 
-        // Call add product API
-        axios
-          .post(`${productsApiPath}/add`, {
-            title: data.title,
-            price: data.price,
-            description: data.description,
-            category: data.category,
-            image: data.image,
-            sold: data.sold,
-            is_sale: data.is_sale,
-            date_of_sale: data.date_of_sale,
-          })
-          .then((res) => {
-            // console.log(res)
+          // Call add product API
+          axios
+            .post(
+              `${productsApiPath}/add`,
+              {
+                title: data.title,
+                price: data.price,
+                description: data.description,
+                category: data.category,
+                image: data.image,
+                sold: data.sold,
+                is_sale: data.is_sale,
+                date_of_sale: data.date_of_sale,
+              },
+              {
+                headers: authConfig.headers,
+              }
+            )
+            .then((res) => {
+              // console.log(res)
 
-            if (res?.data) {
-              MySwal.fire({
-                title: 'Product Added',
-                text: 'You have successfully added a new product',
-                icon: 'success',
-              })
-              reset()
-            }
-          })
-          .catch((err) => {
-            console.log(err)
-            MySwal.fire({
-              title: 'Adding Product Failed',
-              text: 'Please check your product details',
-              icon: 'error',
+              if (res?.data) {
+                MySwal.fire({
+                  title: 'Product Added',
+                  text: 'You have successfully added a new product',
+                  icon: 'success',
+                })
+                reset()
+                return cb && cb(data)
+              }
             })
+            .catch((err) => {
+              console.log(err)
+              MySwal.fire({
+                title: 'Adding Product Failed',
+                text: 'Please check your product details',
+                icon: 'error',
+              })
+              return errCb && errCb(err)
+            })
+        },
+        (err) => {
+          console.log(err, getValues())
+          MySwal.fire({
+            title: 'Invalid Input',
+            text: 'Please check the input fields',
+            icon: 'error',
           })
-      },
-      (err) => {
-        console.log(err, getValues())
-        MySwal.fire({
-          title: 'Invalid Input',
-          text: 'Please check the input fields',
-          icon: 'error',
-        })
-      }
-    )()
-  }, [getValues, handleSubmit, productsApiPath, reset])
+          return errCb && errCb(err)
+        }
+      )()
+    },
+    [authConfig.headers, getValues, handleSubmit, productsApiPath, reset]
+  )
 
   /**
    * Update a product on the server
@@ -112,23 +127,33 @@ export const useProduct = () => {
    * @param errCb - error callback function. It will be called if there is an error while updating a product. (err?: unknown) => void
    */
   const updateProduct = useCallback(
-    (id: number) => {
+    (
+      id: number,
+      cb?: (data?: ProductFormType) => void,
+      errCb?: (err?: unknown) => void
+    ) => {
       handleSubmit(
         (data) => {
           // console.log(data)
 
           // Call update product API
           axios
-            .put(`${productsApiPath}/${id}`, {
-              title: data.title,
-              price: data.price,
-              description: data.description,
-              category: data.category,
-              image: data.image,
-              sold: data.sold,
-              is_sale: data.is_sale,
-              date_of_sale: data.date_of_sale,
-            })
+            .put(
+              `${productsApiPath}/${id}`,
+              {
+                title: data.title,
+                price: data.price,
+                description: data.description,
+                category: data.category,
+                image: data.image,
+                sold: data.sold,
+                is_sale: data.is_sale,
+                date_of_sale: data.date_of_sale,
+              },
+              {
+                headers: authConfig.headers,
+              }
+            )
             .then((res) => {
               // console.log(res)
 
@@ -139,6 +164,7 @@ export const useProduct = () => {
                   icon: 'success',
                 })
                 reset()
+                return cb && cb()
               }
             })
             .catch((err) => {
@@ -149,6 +175,7 @@ export const useProduct = () => {
                 icon: 'error',
               })
             })
+          return errCb && errCb('Error updating product')
         },
         (err) => {
           console.log(err, getValues())
@@ -157,10 +184,11 @@ export const useProduct = () => {
             text: 'Please check the input fields',
             icon: 'error',
           })
+          return errCb && errCb(err || 'Error updating product')
         }
       )()
     },
-    [getValues, handleSubmit, productsApiPath, reset]
+    [getValues, handleSubmit, productsApiPath, reset, authConfig.headers]
   )
 
   /**
@@ -171,9 +199,15 @@ export const useProduct = () => {
    * @param errCb - error callback function. It will be called if there is an error while deleting a product. (err?: unknown) => void
    */
   const deleteProduct = useCallback(
-    (id: number) => {
+    (
+      id: number,
+      cb?: (data?: ProductFormType) => void,
+      errCb?: (err?: unknown) => void
+    ) => {
       axios
-        .delete(`${productsApiPath}/${id}/delete`)
+        .delete(`${productsApiPath}/${id}/delete`, {
+          headers: authConfig.headers,
+        })
         .then((res) => {
           // console.log(res)
 
@@ -183,6 +217,7 @@ export const useProduct = () => {
               text: 'You have successfully deleted the product',
               icon: 'success',
             })
+            return cb && cb()
           }
         })
         .catch((err) => {
@@ -192,9 +227,10 @@ export const useProduct = () => {
             text: 'Please check your product details',
             icon: 'error',
           })
+          return errCb && errCb(err)
         })
     },
-    [productsApiPath]
+    [authConfig.headers, productsApiPath]
   )
 
   return {

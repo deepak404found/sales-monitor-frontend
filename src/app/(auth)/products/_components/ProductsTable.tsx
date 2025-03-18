@@ -11,6 +11,7 @@ import {
   CustomNoRowsOverlay,
   StyledDataGrid,
 } from '@sales-monitor-frontend/components/dataGrid'
+import ActionsCell from '@sales-monitor-frontend/components/dataGrid/cells/ActionsCell'
 import { AvatarCell } from '@sales-monitor-frontend/components/dataGrid/cells/AvatarCell'
 import TextCell from '@sales-monitor-frontend/components/dataGrid/cells/TextCell'
 import { TableToolbarBase } from '@sales-monitor-frontend/components/dataGrid/TabletoolbarBase'
@@ -19,6 +20,7 @@ import { TablePagination } from '@sales-monitor-frontend/components/pagination'
 import { CustomSelect } from '@sales-monitor-frontend/components/select'
 import {
   ListProductsFilter,
+  useProduct,
   useProducts,
 } from '@sales-monitor-frontend/hooks/products'
 import dayjs from 'dayjs'
@@ -36,6 +38,8 @@ const ProductsTable = () => {
     fetchPriceRange,
     // price_range,
   } = useProducts()
+
+  const { deleteProduct } = useProduct()
 
   React.useEffect(
     () => {
@@ -433,6 +437,24 @@ const ProductsTable = () => {
                   text={
                     params.value ? dayjs(params.value).format('YYYY-MM-DD') : ''
                   }
+                />
+              ),
+            },
+            {
+              field: 'actions',
+              headerName: 'Actions',
+              flex: 0.5,
+              minWidth: 200,
+              renderCell: (params) => (
+                <ActionsCell
+                  actions={[
+                    {
+                      label: 'Delete',
+                      onClick: () => {
+                        deleteProduct(params.row.id)
+                      },
+                    },
+                  ]}
                 />
               ),
             },

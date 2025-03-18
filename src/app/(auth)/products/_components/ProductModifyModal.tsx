@@ -1,3 +1,4 @@
+'use client'
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import CustomOutlinedInput from '@sales-monitor-frontend/components/inputs/InputField'
@@ -34,9 +35,11 @@ const ProductModifyModal = ({
 
   const onSubmit = () => {
     if (action === 'add') {
-      addProduct()
+      addProduct(() => {
+        window.location.reload()
+      })
     } else {
-      updateProduct(defaultValues.id)
+      updateProduct(defaultValues?.id || 0)
     }
   }
 
@@ -68,7 +71,7 @@ const ProductModifyModal = ({
           {/* product title */}
           <CustomOutlinedInput
             label={'Product title'}
-            defaultValue={defaultValues.title}
+            defaultValue={defaultValues?.title}
             error={!!errors.title}
             helperText={errors.title?.message}
             {...register('title', { required: 'This field is required' })}
@@ -77,7 +80,7 @@ const ProductModifyModal = ({
           {/* product description */}
           <CustomOutlinedInput
             label={'Product description'}
-            defaultValue={defaultValues.description}
+            defaultValue={defaultValues?.description}
             error={!!errors.description}
             helperText={errors.description?.message}
             {...register('description', { required: 'This field is required' })}
@@ -86,7 +89,7 @@ const ProductModifyModal = ({
           {/* product price */}
           <CustomOutlinedInput
             label={'Product price'}
-            defaultValue={defaultValues.price}
+            defaultValue={defaultValues?.price}
             error={!!errors.price}
             helperText={errors.price?.message}
             type="number"
@@ -97,7 +100,7 @@ const ProductModifyModal = ({
           <Controller
             name="category"
             control={control}
-            defaultValue={defaultValues.category}
+            defaultValue={defaultValues?.category}
             render={({ field }) => (
               <CustomSelect
                 label="Category"
@@ -119,7 +122,7 @@ const ProductModifyModal = ({
           {/* product image */}
           <CustomOutlinedInput
             label={'Product image'}
-            defaultValue={defaultValues.image}
+            defaultValue={defaultValues?.image}
             error={!!errors.image}
             helperText={errors.image?.message}
             {...register('image', { required: 'This field is required' })}
@@ -131,7 +134,7 @@ const ProductModifyModal = ({
             <Controller
               name="is_sale"
               control={control}
-              defaultValue={defaultValues.is_sale}
+              defaultValue={defaultValues?.is_sale}
               render={({ field }) => (
                 <CustomSelect
                   label="Is sale"
@@ -152,7 +155,7 @@ const ProductModifyModal = ({
             <Controller
               name="sold"
               control={control}
-              defaultValue={defaultValues.sold}
+              defaultValue={defaultValues?.sold}
               render={({ field }) => (
                 <CustomSelect
                   label="Sold"
@@ -173,7 +176,7 @@ const ProductModifyModal = ({
           {/* product date of sale */}
           <CustomOutlinedInput
             label={'Date of sale'}
-            defaultValue={defaultValues.date_of_sale}
+            defaultValue={defaultValues?.date_of_sale}
             error={!!errors.date_of_sale}
             helperText={errors.date_of_sale?.message}
             type="date"

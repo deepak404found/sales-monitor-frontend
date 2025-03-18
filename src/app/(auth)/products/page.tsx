@@ -1,10 +1,10 @@
+'use client'
+import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
-import ProductsTable from './_components/ProductsTable'
-import { useProduct } from '@sales-monitor-frontend/hooks/products'
-import Button from '@mui/material/Button'
-import ProductModifyModal from './_components/ProductModifyModal'
 import React from 'react'
+import ProductModifyModal from './_components/ProductModifyModal'
+import ProductsTable from './_components/ProductsTable'
 
 export default function ProductsPage() {
   const [openAddModal, setOpenAddModal] = React.useState(false)
@@ -20,7 +20,7 @@ export default function ProductsPage() {
       />
 
       {/* header */}
-      <Stack>
+      <Stack direction="row" justifyContent="space-between">
         <Typography variant="h4">Products</Typography>
 
         <Button

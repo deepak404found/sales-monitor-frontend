@@ -451,7 +451,9 @@ const ProductsTable = () => {
                     {
                       label: 'Delete',
                       onClick: () => {
-                        deleteProduct(params.row.id)
+                        deleteProduct(params.row.id, () => {
+                          window.location.reload()
+                        })
                       },
                     },
                   ]}

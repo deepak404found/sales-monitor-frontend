@@ -1,9 +1,12 @@
-import axios from 'axios'
-import { useCallback, useState } from 'react'
-import { useApi } from '../api'
-import { ItemsByMonth, ProductsList, SalesByMonth } from '../../utils/types'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { MySwal } from '@sales-monitor-frontend/utils/helpers'
+import axios from 'axios'
 import dayjs from 'dayjs'
+import { useCallback, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+import { ItemsByMonth, ProductsList, SalesByMonth } from '../../utils/types'
+import { useApi } from '../api'
 
 export type ListProductsFilter = {
   offset: number
@@ -16,6 +19,194 @@ export type ListProductsFilter = {
   is_sold?: boolean | null
   price_min?: number | null
   price_max?: number | null
+}
+
+const ProductForm = z.object({
+  title: z.string().nonempty('Please enter a valid title'),
+  price: z.number().min(0, 'Price must be greater than 0'),
+  description: z.string().nonempty('Please enter a valid description'),
+  category: z.string().nonempty('Please enter a valid category'),
+  image: z.string().nonempty('Please enter a valid image url'),
+  sold: z.boolean(),
+  is_sale: z.boolean(),
+  date_of_sale: z.string().optional(),
+})
+
+export type ProductFormType = z.infer<typeof ProductForm>
+
+export const useProduct = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+    control,
+    setValue,
+    getValues,
+  } = useForm<ProductFormType>({
+    resolver: zodResolver(ProductForm),
+  })
+
+  const { productsApiPath } = useApi()
+
+  /**
+   * Add a new product to the server
+   *
+   * @param cb - callback function. It will be called after adding a new product. (data?: Product) => void
+   * @param errCb - error callback function. It will be called if there is an error while adding a new product. (err?: unknown) => void
+   */
+  const addProduct = useCallback(() => {
+    handleSubmit(
+      (data) => {
+        // console.log(data)
+
+        // Call add product API
+        axios
+          .post(`${productsApiPath}/add`, {
+            title: data.title,
+            price: data.price,
+            description: data.description,
+            category: data.category,
+            image: data.image,
+            sold: data.sold,
+            is_sale: data.is_sale,
+            date_of_sale: data.date_of_sale,
+          })
+          .then((res) => {
+            // console.log(res)
+
+            if (res?.data) {
+              MySwal.fire({
+                title: 'Product Added',
+                text: 'You have successfully added a new product',
+                icon: 'success',
+              })
+              reset()
+            }
+          })
+          .catch((err) => {
+            console.log(err)
+            MySwal.fire({
+              title: 'Adding Product Failed',
+              text: 'Please check your product details',
+              icon: 'error',
+            })
+          })
+      },
+      (err) => {
+        console.log(err, getValues())
+        MySwal.fire({
+          title: 'Invalid Input',
+          text: 'Please check the input fields',
+          icon: 'error',
+        })
+      }
+    )()
+  }, [getValues, handleSubmit, productsApiPath, reset])
+
+  /**
+   * Update a product on the server
+   *
+   * @param id - id of the product to be updated
+   * @param cb - callback function. It will be called after updating a product. (data?: Product) => void
+   * @param errCb - error callback function. It will be called if there is an error while updating a product. (err?: unknown) => void
+   */
+  const updateProduct = useCallback(
+    (id: number) => {
+      handleSubmit(
+        (data) => {
+          // console.log(data)
+
+          // Call update product API
+          axios
+            .put(`${productsApiPath}/${id}`, {
+              title: data.title,
+              price: data.price,
+              description: data.description,
+              category: data.category,
+              image: data.image,
+              sold: data.sold,
+              is_sale: data.is_sale,
+              date_of_sale: data.date_of_sale,
+            })
+            .then((res) => {
+              // console.log(res)
+
+              if (res?.data) {
+                MySwal.fire({
+                  title: 'Product Updated',
+                  text: 'You have successfully updated the product',
+                  icon: 'success',
+                })
+                reset()
+              }
+            })
+            .catch((err) => {
+              console.log(err)
+              MySwal.fire({
+                title: 'Updating Product Failed',
+                text: 'Please check your product details',
+                icon: 'error',
+              })
+            })
+        },
+        (err) => {
+          console.log(err, getValues())
+          MySwal.fire({
+            title: 'Invalid Input',
+            text: 'Please check the input fields',
+            icon: 'error',
+          })
+        }
+      )()
+    },
+    [getValues, handleSubmit, productsApiPath, reset]
+  )
+
+  /**
+   * delete a product from the server
+   *
+   * @param id - id of the product to be deleted
+   * @param cb - callback function. It will be called after deleting a product. (data?: Product) => void
+   * @param errCb - error callback function. It will be called if there is an error while deleting a product. (err?: unknown) => void
+   */
+  const deleteProduct = useCallback(
+    (id: number) => {
+      axios
+        .delete(`${productsApiPath}/${id}/delete`)
+        .then((res) => {
+          // console.log(res)
+
+          if (res?.data) {
+            MySwal.fire({
+              title: 'Product Deleted',
+              text: 'You have successfully deleted the product',
+              icon: 'success',
+            })
+          }
+        })
+        .catch((err) => {
+          console.log(err)
+          MySwal.fire({
+            title: 'Deleting Product Failed',
+            text: 'Please check your product details',
+            icon: 'error',
+          })
+        })
+    },
+    [productsApiPath]
+  )
+
+  return {
+    register,
+    errors,
+    addProduct,
+    updateProduct,
+    deleteProduct,
+    setValue,
+    reset,
+    control,
+  }
 }
 
 export const useProducts = () => {

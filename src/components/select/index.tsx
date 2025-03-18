@@ -17,10 +17,10 @@ type CustomSelectProps = SelectProps & {
   showlabelInsideInput?: boolean
 
   /** array of options to display in the select */
-  options: { label: string; value: string }[]
+  options: { label: string; value: unknown }[]
 
   /** callback function to set the value of the select */
-  setvalue?: (value: string) => void
+  setvalue?: (value: unknown) => void
 
   /** helper text to display with the select */
   helperText?: string
@@ -113,8 +113,8 @@ export const CustomSelect = ({
         }}
         size={size}
       >
-        {options.map((option) => (
-          <MenuItem key={option.value} value={option.value}>
+        {options.map((option, index) => (
+          <MenuItem key={index} value={option.value as string}>
             {option.label}
           </MenuItem>
         ))}

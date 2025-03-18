@@ -211,7 +211,7 @@ export const useProduct = () => {
         .then((res) => {
           // console.log(res)
 
-          if (res?.data) {
+          if (res?.status === 204) {
             MySwal.fire({
               title: 'Product Deleted',
               text: 'You have successfully deleted the product',

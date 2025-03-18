@@ -6,6 +6,7 @@ import CustomDrawer from '@sales-monitor-frontend/components/modals/CustomDrawer
 import { CustomSelect } from '@sales-monitor-frontend/components/select'
 import { useProduct, useProducts } from '@sales-monitor-frontend/hooks/products'
 import { Product } from '@sales-monitor-frontend/utils/types'
+import dayjs from 'dayjs'
 import React from 'react'
 import { Controller } from 'react-hook-form'
 
@@ -29,7 +30,7 @@ const ProductModifyModal = ({
     updateProduct,
     // deleteProduct,
     // setValue,
-    // reset,
+    reset,
     control,
   } = useProduct()
 
@@ -39,7 +40,9 @@ const ProductModifyModal = ({
         window.location.reload()
       })
     } else {
-      updateProduct(defaultValues?.id || 0)
+      updateProduct(defaultValues?.id || 0, () => {
+        onClose()
+      })
     }
   }
 
@@ -50,6 +53,24 @@ const ProductModifyModal = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   )
+
+  // reset from if action is edit
+  React.useEffect(() => {
+    if (action === 'edit') {
+      reset({
+        title: defaultValues?.title,
+        category: defaultValues?.category || '',
+        description: defaultValues?.description,
+        image: defaultValues?.image,
+        price: defaultValues?.price,
+        is_sale: defaultValues?.is_sale || false,
+        sold: defaultValues?.sold || false,
+        date_of_sale: defaultValues?.date_of_sale
+          ? dayjs(defaultValues?.date_of_sale).format('YYYY-MM-DD')
+          : undefined,
+      })
+    }
+  }, [action, defaultValues, reset])
 
   return (
     <CustomDrawer
@@ -104,13 +125,13 @@ const ProductModifyModal = ({
             render={({ field }) => (
               <CustomSelect
                 label="Category"
-                options={[{ value: 'all', label: 'All' }].concat(
+                options={[{ value: '', label: 'Select Category' }].concat(
                   categories?.map((category) => ({
                     value: category,
                     label: category,
                   })) || []
                 )}
-                value={field.value || 'all'}
+                value={field.value || ''}
                 setvalue={(value) => {
                   field.onChange(value)
                 }}

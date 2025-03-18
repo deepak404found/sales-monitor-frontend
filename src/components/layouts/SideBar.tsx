@@ -37,7 +37,7 @@ export const SideBar = () => {
     setCurrentPath(appRoutes.find((route) => route.route === path)?.route || '')
   }, [path])
 
-  console.log('currentPath', layoutState)
+  // console.log('currentPath', layoutState)
 
   return (
     <Drawer

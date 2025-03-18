@@ -24,9 +24,12 @@ import {
   useProducts,
 } from '@sales-monitor-frontend/hooks/products'
 import dayjs from 'dayjs'
-import React, { JSXElementConstructor, useMemo } from 'react'
+import React, { JSXElementConstructor, useMemo, useState } from 'react'
+import ProductModifyModal from './ProductModifyModal'
+import { Product } from '../../../../utils/types'
 
 const ProductsTable = () => {
+  const [openModifyModal, setOpenModifyModal] = useState<Product | null>(null)
   const {
     products,
     loading,
@@ -61,6 +64,16 @@ const ProductsTable = () => {
 
   return (
     <Stack spacing={3}>
+      {/* modify modal */}
+      <ProductModifyModal
+        open={openModifyModal !== null}
+        onClose={() => {
+          setOpenModifyModal(null)
+        }}
+        action="edit"
+        defaultValues={openModifyModal || undefined}
+      />
+
       {/* filter bar */}
       <Stack
         direction={{
@@ -457,6 +470,12 @@ const ProductsTable = () => {
                             offset: 0,
                           })
                         })
+                      },
+                    },
+                    {
+                      label: 'Update',
+                      onClick: () => {
+                        setOpenModifyModal(params.row as Product)
                       },
                     },
                   ]}

@@ -83,8 +83,9 @@ const ProductModifyModal = ({
       {/* wrapper */}
       <Stack
         sx={{
-          minHeight: '80vh',
+          minHeight: '86vh',
           justifyContent: 'space-between',
+          gap: '32px',
         }}
       >
         {/* form */}
@@ -125,6 +126,7 @@ const ProductModifyModal = ({
             render={({ field }) => (
               <CustomSelect
                 label="Category"
+                showlabelInsideInput={false}
                 options={[{ value: '', label: 'Select Category' }].concat(
                   categories?.map((category) => ({
                     value: category,
@@ -216,7 +218,7 @@ const ProductModifyModal = ({
           gap={'16px'}
           width={'100%'}
         >
-          <Button color={'secondary'} onClick={onClose}>
+          <Button color={'error'} variant="outlined" onClick={onClose}>
             Cancel
           </Button>
 

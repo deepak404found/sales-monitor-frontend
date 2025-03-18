@@ -30,6 +30,7 @@ export const CustomDrawer = ({
       open={open}
       onClose={toggleDrawer}
       sx={{
+        zIndex: 2,
         '& .MuiDrawer-paper': {
           backgroundImage: 'none',
           backgroundColor: 'surface.page',

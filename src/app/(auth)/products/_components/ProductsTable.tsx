@@ -452,7 +452,10 @@ const ProductsTable = () => {
                       label: 'Delete',
                       onClick: () => {
                         deleteProduct(params.row.id, () => {
-                          listProducts(productsFilter)
+                          listProducts({
+                            ...productsFilter,
+                            offset: 0,
+                          })
                         })
                       },
                     },

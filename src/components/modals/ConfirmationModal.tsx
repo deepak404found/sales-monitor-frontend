@@ -52,6 +52,7 @@ export const ConfirmationModal = ({
           {/* cancel button */}
           <Button
             color={'secondary'}
+            variant={'outlined'}
             onClick={() => {
               handleClose()
             }}

@@ -27,9 +27,13 @@ import dayjs from 'dayjs'
 import React, { JSXElementConstructor, useMemo, useState } from 'react'
 import ProductModifyModal from './ProductModifyModal'
 import { Product } from '../../../../utils/types'
+import ConfirmationModal from '@sales-monitor-frontend/components/modals/ConfirmationModal'
 
 const ProductsTable = () => {
   const [openModifyModal, setOpenModifyModal] = useState<Product | null>(null)
+  const [openDeleteConfirmModal, setOpenDeleteConfirmModal] = useState<
+    number | null
+  >(null)
   const {
     products,
     loading,
@@ -72,6 +76,27 @@ const ProductsTable = () => {
         }}
         action="edit"
         defaultValues={openModifyModal || undefined}
+      />
+
+      {/* confirm delete modal */}
+      <ConfirmationModal
+        open={openDeleteConfirmModal !== null}
+        handleClose={() => {
+          setOpenDeleteConfirmModal(null)
+        }}
+        title="Delete Product"
+        subtitle="Are you sure you want to delete this product?"
+        handleProceed={() => {
+          if (openDeleteConfirmModal) {
+            deleteProduct(openDeleteConfirmModal, () => {
+              setOpenDeleteConfirmModal(null)
+              listProducts({
+                ...productsFilter,
+                offset: 0,
+              })
+            })
+          }
+        }}
       />
 
       {/* filter bar */}
@@ -463,14 +488,8 @@ const ProductsTable = () => {
                   actions={[
                     {
                       label: 'Delete',
-                      onClick: () => {
-                        deleteProduct(params.row.id, () => {
-                          listProducts({
-                            ...productsFilter,
-                            offset: 0,
-                          })
-                        })
-                      },
+                      onClick: () =>
+                        setOpenDeleteConfirmModal(params.row.id as number),
                     },
                     {
                       label: 'Update',

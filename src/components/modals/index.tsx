@@ -51,7 +51,7 @@ export const StyledModal = ({
           boxShadow: 24,
           borderRadius: 4,
           p: 3,
-          backgroundColor: 'surface.page',
+          backgroundColor: 'background.paper',
           ...sx,
         }}
       >

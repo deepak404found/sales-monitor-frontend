@@ -149,7 +149,8 @@ export const useProduct = () => {
                 image: data.image,
                 sold: data.sold,
                 is_sale: data.is_sale,
-                date_of_sale: data.date_of_sale,
+                date_of_sale:
+                  data.date_of_sale === '' ? null : data.date_of_sale,
               },
               {
                 headers: authConfig.headers,
@@ -169,7 +170,7 @@ export const useProduct = () => {
               }
             })
             .catch((err) => {
-              console.log(err)
+              console.log(err, data)
               MySwal.fire({
                 title: 'Updating Product Failed',
                 text: 'Please check your product details',

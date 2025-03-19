@@ -89,7 +89,7 @@ const ProductModifyModal = ({
         }}
       >
         {/* form */}
-        <Stack gap={'24px'}>
+        <Stack gap={'20px'}>
           {/* product title */}
           <CustomOutlinedInput
             label={'Product title'}

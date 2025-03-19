@@ -43,6 +43,7 @@ export const useProduct = () => {
     control,
     setValue,
     getValues,
+    watch,
   } = useForm<ProductFormType>({
     resolver: zodResolver(ProductForm),
   })
@@ -244,6 +245,7 @@ export const useProduct = () => {
     setValue,
     reset,
     control,
+    watch,
   }
 }
 

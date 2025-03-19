@@ -23,16 +23,8 @@ const ProductModifyModal = ({
 }) => {
   const { categories, listCategories } = useProducts()
 
-  const {
-    register,
-    errors,
-    addProduct,
-    updateProduct,
-    // deleteProduct,
-    // setValue,
-    reset,
-    control,
-  } = useProduct()
+  const { register, errors, addProduct, updateProduct, watch, reset, control } =
+    useProduct()
 
   const onSubmit = () => {
     if (action === 'add') {
@@ -167,7 +159,7 @@ const ProductModifyModal = ({
                   ]}
                   value={field.value || false}
                   setvalue={(value) => {
-                    field.onChange(value)
+                    field.onChange(value || false)
                   }}
                 />
               )}
@@ -188,7 +180,7 @@ const ProductModifyModal = ({
                   ]}
                   value={field.value || false}
                   setvalue={(value) => {
-                    field.onChange(value)
+                    field.onChange(value || false)
                   }}
                 />
               )}
@@ -203,6 +195,7 @@ const ProductModifyModal = ({
             error={!!errors.date_of_sale}
             helperText={errors.date_of_sale?.message}
             type="date"
+            disabled={watch('sold') ? false : true}
             {...register('date_of_sale', {
               required: 'This field is required',
             })}

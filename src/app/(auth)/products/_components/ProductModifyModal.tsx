@@ -41,7 +41,7 @@ const ProductModifyModal = ({
       })
     } else {
       updateProduct(defaultValues?.id || 0, () => {
-        onClose()
+        window.location.reload()
       })
     }
   }
